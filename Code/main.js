@@ -3,19 +3,24 @@ function main()
 	let cellsX = 10, cellsY = 10;
 	let noOfMines = 10;
 
+	let GameState = {
+		mineLocations: new Set(),
+		cells: new Array(cellsX * cellsY)
+	}
+
 	// TODO: Set Board Size
 	
 	// Generate grid
-	for(let i = 0; i < (cellsX * cellsY); i++)
+
+	let gameBoard = document.querySelector('.game-board');
+	for(let i = 0; i < GameState.cells.length; i++)
 	{
-		let parent = document.querySelector('.game-board');
 		let child = document.createElement('div');
 		child.setAttribute('class', 'cell');
-		child.data.cellid(i);
-		parent.appendChild(child);
+		child.dataset.cellid = i;
+		gameBoard.appendChild(child);
+		GameState.cells[i] = child;
 	}
-
-	let mineLocations = new Set();
 
 	for(let i = 0; i < noOfMines; i++)
 	{	
@@ -23,42 +28,38 @@ function main()
 		while (loop)
 		{
 			let rand = Math.floor(Math.random() * 100);
-			if (!mineLocations.has(rand))
+			if (!GameState.mineLocations.has(rand))
 			{
-				mineLocations.add(rand);
+				GameState.mineLocations.add(rand);
 				loop = false;
 			}
 		}
 	}
 
-	for (cell of document.querySelectorAll(".cell"))
+	for (let cell of GameState.cells)
 	{
-		cell.addEventListener("click", CellClick.bind(mineLocations));
+		cell.addEventListener("click", cellClick.bind(GameState));
 	}
 }
 
-function GameState() {
-	mineLocations;
-	
-}
 
 
-function CellClick(event) {
+function cellClick(event) {
 	console.log(this);
 	console.log(event);
 
 	switch (event.target.className) {
 		case "cell": 
 		{
-			if (this.has(event.target.data.cellid))
+			if (this.mineLocations.has(parseInt(event.target.dataset.cellid)))
 			{
 				//DO FAILURE STUFF
 				event.target.className = "cell-clicked-mine";
-				for(let mines of this)
+				for(let mines of this.mineLocations)
 				{
-					if (!(event.target.data.cellid == mines))
+					if (!(event.target.dataset.cellid == mines))
 						{
-							
+							this.cells[mines].className = "cell-mine"
 						}
 				}
 			}
