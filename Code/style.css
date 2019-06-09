@@ -1,13 +1,25 @@
+
+:root {
+	--game-rows: 10;
+	--game-columns: 10;
+}
+
 body {
 	font-family: sans-serif;
 	font-size: 10pt;
 }
 
+div {
+	text-align: center;
+	line-height: 50px;
+	font-size: 20px;
+	font-weight: bold;
+}
 .game-board {
 	display: inline-grid;
 	background-color: #2196F3;
-	grid-template-columns: repeat(10, 50px);
-	grid-template-rows: repeat(10, 50px);
+	grid-template-columns: repeat(var(--game-columns), 50px);
+	grid-template-rows: repeat(var(--game-rows), 50px);
 }
 
 .cell {
