@@ -120,13 +120,12 @@ function processCell(cell, gameState) {
 			{
 				if (gameState.mineLocations.has(parseInt(gameState.cells[cell].dataset.cellid))) {
 					//DO FAILURE STUFF
-					gameState.cells[cell].className = "cell-clicked-mine";
+
 					for (let mines of gameState.mineLocations) {
-						if (!(event.target.dataset.cellid == mines)) {
 							gameState.cells[mines].className = "cell-mine"
 						}
+						gameState.cells[cell].className = "cell-clicked-mine";
 					}
-				}
 				else {
 					let cellsToCheck = [cell];
 					while (cellsToCheck.length > 0) {
