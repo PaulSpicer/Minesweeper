@@ -1,28 +1,31 @@
 function main()
 {
+	// TODO: User Set Board Size
 	let cellsX = 10, cellsY = 10;
 	let noOfMines = 10;
 
-	let GameState = 
+	let gameState = 
 	{
+		cellsX: 10,
+		cellsY: 10,
+		noOfMines: 10,
 		mineLocations: new Set(),
 		cells: new Array(cellsX * cellsY)
 	}
 
-	// TODO: Set Board Size
-	document.documentElement.style.setProperty("--game-rows", cellsX);
-	document.documentElement.style.setProperty("--game-columns", cellsY);
+	document.documentElement.style.setProperty("--game-rows", gameState.cellsX);
+	document.documentElement.style.setProperty("--game-columns", gameState.cellsY);
 
 	// Generate grid
 	let gameBoard = document.querySelector(".game-board");
 	
-	for(let i = 0; i < GameState.cells.length; i++)
+	for(let i = 0; i < gameState.cells.length; i++)
 	{
 		let child = document.createElement("div");
 		child.setAttribute("class", "cell");
 		child.dataset.cellid = i;
 		gameBoard.appendChild(child);
-		GameState.cells[i] = child;
+		gameState.cells[i] = child;
 	}
 
 	for(let i = 0; i < noOfMines; i++)
@@ -30,69 +33,35 @@ function main()
 		let loop = true;		
 		while (loop)
 		{
-			let rand = Math.floor(Math.random() * GameState.cells.length);
-			if (!GameState.mineLocations.has(rand))
+			let rand = Math.floor(Math.random() * gameState.cells.length);
+			if (!gameState.mineLocations.has(rand))
 			{
-				GameState.mineLocations.add(rand);
+				gameState.mineLocations.add(rand);
 				loop = false;
 			}
 		}
 	}
 
 	// Calculate adjacency hints
-	for(let i = 0; i < GameState.cells.length; i++)
+	for(let i = 0; i < gameState.cells.length; i++)
 	{
-		let adj = new Map();
-		adj.set("W", i - 1);
-		adj.set("E", i + 1);
-		adj.set("N", i - cellsX);
-		adj.set("S", i + cellsX);
-		adj.set("NW", i - cellsX - 1);
-		adj.set("NE", i - cellsX + 1);
-		adj.set("SW", i + cellsX - 1);
-		adj.set("SE", i + cellsX + 1);
-
 		let count = 0;
-		//Top Edge
-		if (i < cellsX) { 
-			adj.delete("NW");
-			adj.delete("NE");
-			adj.delete("N");
-		}
-		// Left Edge
-		if (i % cellsX == 0) { 
-			adj.delete("W");
-			adj.delete("SW");
-			adj.delete("NW");
-		}
-		// Right Edge
-		if (i % cellsX == cellsX) {
-			adj.delete("E");
-			adj.delete("NE");
-			adj.delete("SE");
-		}
-		// Bottom Edge
-		if (i > (i.length - cellsX)) {
-			adj.delete("S");
-			adj.delete("SW");
-			adj.delete("SE");
-		}
-
-		for (let a of adj.values()) 
+		for (let a of calculateAdjacents(i, gameState)) 
 		{
-			for (let b of GameState.mineLocations.values())
+			for (let b of gameState.mineLocations.values())
 			{
 				if (a == b) {count++;}
 			}
 		}
-		GameState.cells[i].dataset.adjMines = count;
+		gameState.cells[i].dataset.adjMines = count;
 	}
 
 	//Register click handlers
 
-	gameBoard.addEventListener("contextmenu", cellRightClicked.bind(GameState));
-	gameBoard.addEventListener("click", cellClicked.bind(GameState));
+	gameBoard.addEventListener("contextmenu", cellRightClicked.bind(gameState));
+	gameBoard.addEventListener("click", cellClicked.bind(gameState));
 }
+
 
 function cellRightClicked(event) {
 
@@ -113,6 +82,46 @@ function cellRightClicked(event) {
 	event.preventDefault();
 
 }
+
+function calculateAdjacents(cell, gameState) {
+
+	let adj = new Map();
+	adj.set("W", cell - 1);
+	adj.set("E", cell + 1);
+	adj.set("N", cell - gameState.cellsX);
+	adj.set("S", cell + gameState.cellsX);
+	adj.set("NW", cell - gameState.cellsX - 1);
+	adj.set("NE", cell - gameState.cellsX + 1);
+	adj.set("SW", cell + gameState.cellsX - 1);
+	adj.set("SE", cell + gameState.cellsX + 1);
+
+	//Top Edge
+	if (cell < gameState.cellsX) { 
+		adj.delete("NW");
+		adj.delete("NE");
+		adj.delete("N");
+	}
+	// Left Edge
+	if (cell % gameState.cellsX == 0) { 
+		adj.delete("W");
+		adj.delete("SW");
+		adj.delete("NW");
+	}
+	// Right Edge
+	if (cell % gameState.cellsX == gameState.cellsX) {
+		adj.delete("E");
+		adj.delete("NE");
+		adj.delete("SE");
+	}
+	// Bottom Edge
+	if (cell > (gameState.cells.length - gameState.cellsX)) {
+		adj.delete("S");
+		adj.delete("SW");
+		adj.delete("SE");		
+	}
+	return adj.values();
+}
+
 
 function cellClicked(event) {
 
@@ -139,6 +148,15 @@ function cellClicked(event) {
 				if (event.target.dataset.adjMines != 0)
 				{
 					event.target.textContent = event.target.dataset.adjMines;
+				}
+				else
+				{
+					let cellsToCheck = [event.target.dataset.cellid];
+
+					while (cellsToCheck.length > 0) 
+					{
+						let currentCell = cellsToCheck.pop();					
+					}
 				}
 			}
 			break;

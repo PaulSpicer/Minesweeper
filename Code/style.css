@@ -2,6 +2,8 @@
 :root {
 	--game-rows: 10;
 	--game-columns: 10;
+	--cell-bg-dark: #AAAAAA;
+	--cell-bg-light: #CCCCCC;
 }
 
 body {
@@ -18,20 +20,20 @@ div {
 
 .game-board {
 	display: inline-grid;
-	background-color: grey;
+	background-color: var(--cell-bg-dark);
 	grid-template-columns: repeat(var(--game-columns), 50px);
 	grid-template-rows: repeat(var(--game-rows), 50px);
 }
 
 .cell {
 	border: black solid 1px;
-	background-color: grey;
+	background-color: var(--cell-bg-dark);
 }
 
 .cell-flagged {
 	border: black solid 1px;
 	background-image: url(flag.png);
-	background-color: grey;
+	background-color: var(--cell-bg-dark);
     background-size: contain;
     background-repeat: no-repeat;
 	background-position-y: 50%;
@@ -40,13 +42,13 @@ div {
 
 .cell-clicked {
 	border: black solid 1px;
-	background-color: darkgray;
+	background-color: var(--cell-bg-light);
 }
 
 .cell-mine {
 	border: black solid 1px;
 	background-image: url(mine.png);
-	background-color: #2196F3;
+	background-color: var(--cell-bg-light);
 }
 
 .cell-clicked-mine {
