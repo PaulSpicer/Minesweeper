@@ -123,39 +123,42 @@ function calculateAdjacents(cell, gameState) {
 }
 
 
-function cellClicked(event) {
+function processCell(cell, gameObject) {
 
-	switch (event.target.className) 
+	switch (gameObject.cells[cell].className)
 	{
 		case "cell": 
 		{
-			if (this.mineLocations.has(parseInt(event.target.dataset.cellid)))
+			if (gameObject.mineLocations.has(parseInt(gameObject.cells[cell].dataset.cellid)))
 			{
 				//DO FAILURE STUFF
-				event.target.className = "cell-clicked-mine";
-				for(let mines of this.mineLocations)
+				gameObject.cells[cell].className = "cell-clicked-mine";
+				for(let mines of gameObject.mineLocations)
 				{
 					if (!(event.target.dataset.cellid == mines))
 						{
-							this.cells[mines].className = "cell-mine"
+							gameObject.cells[mines].className = "cell-mine"
 						}
 				}
 			}
 			else 
 			{
 				//UNCOVER SQUARE
-				event.target.className = "cell-clicked";
-				if (event.target.dataset.adjMines != 0)
+				gameObject.cells[cell].className = "cell-clicked";
+				if (gameObject.cells[cell].dataset.adjMines != 0)
 				{
-					event.target.textContent = event.target.dataset.adjMines;
+					gameObject.cells[cell].textContent = event.target.dataset.adjMines;
 				}
 				else
 				{
-					let cellsToCheck = [event.target.dataset.cellid];
+					let cellsToCheck = [gameObject.cells[cell].dataset.cellid];
 
 					while (cellsToCheck.length > 0) 
 					{
-						let currentCell = cellsToCheck.pop();					
+						let currentCell = cellsToCheck.pop();
+						for (let adj in calculateAdjacents(currentCell, gameObject)) {
+
+						}			
 					}
 				}
 			}
@@ -165,6 +168,11 @@ function cellClicked(event) {
 		case "cell-flagged":
 		default: break;
 	}
+}
+
+
+function cellClicked(event) {
+	processCell(event.target.dataset.cellid, this);
 }
 
 document.addEventListener("DOMContentLoaded", evt => main());
