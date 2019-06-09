@@ -14,11 +14,12 @@ function main()
 	document.documentElement.style.setProperty("--game-columns", cellsY);
 
 	// Generate grid
-	let gameBoard = document.querySelector('.game-board');
+	let gameBoard = document.querySelector(".game-board");
+	
 	for(let i = 0; i < GameState.cells.length; i++)
 	{
-		let child = document.createElement('div');
-		child.setAttribute('class', 'cell');
+		let child = document.createElement("div");
+		child.setAttribute("class", "cell");
 		child.dataset.cellid = i;
 		gameBoard.appendChild(child);
 		GameState.cells[i] = child;
@@ -87,15 +88,33 @@ function main()
 		GameState.cells[i].dataset.adjMines = count;
 	}
 
-	for (let cell of GameState.cells)
-	{
-		cell.addEventListener("click", cellClick.bind(GameState));
-	}
+	//Register click handlers
+
+	gameBoard.addEventListener("contextmenu", cellRightClicked.bind(GameState));
+	gameBoard.addEventListener("click", cellClicked.bind(GameState));
 }
 
-function cellClick(event) {
-	console.log(this);
-	console.log(event);
+function cellRightClicked(event) {
+
+	switch (event.target.className)
+	{
+		case "cell": 
+		{
+			event.target.className = "cell-flagged";
+			break;
+		}
+		case "cell-flagged":
+		{
+			event.target.className = "cell";
+			break;
+		}
+		default: break;
+	}
+	event.preventDefault();
+
+}
+
+function cellClicked(event) {
 
 	switch (event.target.className) 
 	{
@@ -130,4 +149,4 @@ function cellClick(event) {
 	}
 }
 
-document.addEventListener('DOMContentLoaded', evt => main());
+document.addEventListener("DOMContentLoaded", evt => main());

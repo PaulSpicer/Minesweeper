@@ -15,30 +15,42 @@ div {
 	font-size: 20px;
 	font-weight: bold;
 }
+
 .game-board {
 	display: inline-grid;
-	background-color: #2196F3;
+	background-color: grey;
 	grid-template-columns: repeat(var(--game-columns), 50px);
 	grid-template-rows: repeat(var(--game-rows), 50px);
 }
 
 .cell {
-	border-style: solid;
-	border-width: 1px;
-	border-color: black;
+	border: black solid 1px;
 	background-color: grey;
 }
 
+.cell-flagged {
+	border: black solid 1px;
+	background-image: url(flag.png);
+	background-color: grey;
+    background-size: contain;
+    background-repeat: no-repeat;
+	background-position-y: 50%;
+	background-position-x: 50%;
+}
+
 .cell-clicked {
-	border-style: solid;
-	border-width: 1px;
+	border: black solid 1px;
 	background-color: darkgray;
 }
 
 .cell-mine {
+	border: black solid 1px;
 	background-image: url(mine.png);
+	background-color: #2196F3;
 }
+
 .cell-clicked-mine {
+	border: black solid 1px;
 	background-image: url(mine.png);
 	background-color: red;
 }
