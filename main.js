@@ -1,10 +1,9 @@
 function main() {
-	// TODO: User Set Board Size
+	// TODO: User Set Board Size & Start New Game Logic
 	let cellsX = 10, cellsY = 10;
 	let noOfMines = 10;
 
-	let gameState =
-	{
+	let gameState = {
 		cellsX: 10,
 		cellsY: 10,
 		noOfMines: 10,
@@ -49,14 +48,12 @@ function main() {
 	}
 
 	//Register click handlers
-
 	gameBoard.addEventListener("contextmenu", cellRightClicked.bind(gameState));
 	gameBoard.addEventListener("click", cellClicked.bind(gameState));
 }
 
 
 function cellRightClicked(event) {
-
 	switch (event.target.className) {
 		case "cell":
 			{
@@ -75,7 +72,6 @@ function cellRightClicked(event) {
 }
 
 function calculateAdjacents(cell, gameState) {
-
 	let adj = new Map();
 	adj.set("W", cell - 1);
 	adj.set("E", cell + 1);
@@ -114,7 +110,6 @@ function calculateAdjacents(cell, gameState) {
 }
 
 function processCell(cell, gameState) {
-
 	switch (gameState.cells[cell].className) {
 		case "cell":
 			{
@@ -151,9 +146,14 @@ function processCell(cell, gameState) {
 		case "cell-flagged":
 		default: break;
 	}
-
 }
 
+
+function setGameDiff(row, col, mines) {
+	document.querySelector("#iptRows").value = row;
+	document.querySelector("#iptColumns").value = col;
+	document.querySelector("#iptMines").value = mines;
+}
 
 function cellClicked(event) {
 	processCell(parseInt(event.target.dataset.cellid), this);

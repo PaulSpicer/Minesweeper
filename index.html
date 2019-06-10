@@ -7,7 +7,17 @@
     <script type="text/javascript" src="main.js"></script>
   </head>
   <body> 
-    <div class="game-board">
+    <div class="game-board"></div>
+    <div class="ui">
+        <button onclick="setGameDiff(9,9,10)">Beginner</button>
+        <button onclick="setGameDiff(16,16,40)">Intermediate</button>
+        <button onclick="setGameDiff(16,30,99)">Expert</button>
+        <br>
+        <label for="iptRows">Rows: </label><input type="text" id="iptRows"> 
+        <label for="iptColumns">Columns: </label><input type="text" id="iptColumns"> 
+        <label for="iptMines">Mines: </label><input type="text" id="iptMines">
+        <br>   
+        <button>Start</button> 
     </div>
   </body>
 </html>

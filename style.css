@@ -1,4 +1,6 @@
 
+/* VARIABLES */
+
 :root {
 	--game-rows: 10;
 	--game-columns: 10;
@@ -6,17 +8,13 @@
 	--cell-bg-light: #CCCCCC;
 }
 
+/* GAME BOARD */
+
 body {
 	font-family: sans-serif;
 	font-size: 10pt;
 }
 
-div {
-	text-align: center;
-	line-height: 50px;
-	font-size: 20px;
-	font-weight: bold;
-}
 
 .game-board {
 	display: inline-grid;
@@ -43,6 +41,10 @@ div {
 .cell-clicked {
 	border: black solid 1px;
 	background-color: var(--cell-bg-light);
+	text-align: center;
+	line-height: 50px;
+	font-size: 20px;
+	font-weight: bold;
 }
 
 .cell-mine {
@@ -55,4 +57,14 @@ div {
 	border: black solid 1px;
 	background-image: url(mine.png);
 	background-color: red;
+}
+
+/* CONTROLS */
+input {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	width: 50px;
+}
+.ui {
+	margin-top: 30px;
 }
