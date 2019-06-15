@@ -182,7 +182,6 @@ function processCell(cell, gameState) {
 							}
 						}
 					}
-					console.log(gameState.cellsRemaining);
 				}
 				break;
 			}
@@ -208,6 +207,7 @@ function setGameDifficulty(row, col, mines) {
 	document.querySelector("#txtRows").value = row;
 	document.querySelector("#txtColumns").value = col;
 	document.querySelector("#txtMines").value = mines;
+	startGame();
 }
 
 function cellClicked(event) {
