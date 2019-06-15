@@ -16,6 +16,10 @@ function startGame() {
 	while (gameContainer.firstChild) {
 		gameContainer.removeChild(gameContainer.firstChild);
 	}
+	if (document.documentElement.INTERVALREFERENCE != null)
+	{
+		window.clearInterval(document.documentElement.INTERVALREFERENCE);
+	}
 
 	// Setup Game
 	let iptRows = document.querySelector("#txtRows").value;
@@ -71,7 +75,6 @@ function startGame() {
 	gameBoard.addEventListener("contextmenu", cellRightClicked.bind(gameState));
 	gameBoard.addEventListener("click", cellClicked.bind(gameState));
 }
-
 
 function mineSetup(immuneCell, gameState) {
 	// Seed Mines
@@ -200,6 +203,7 @@ function cellClicked(event) {
 			mineSetup(targetCell, this);
 			this.status = gameCondition.IN_PROGRESS;
 			this.timerHandler = window.setInterval(updateClock.bind(this), 1000);
+			document.documentElement.INTERVALREFERENCE = this.timerHandler;
 		}
 		case gameCondition.IN_PROGRESS: {
 			processCell(targetCell, this);
