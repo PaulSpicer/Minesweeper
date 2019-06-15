@@ -1,8 +1,15 @@
-function main() {
+function pageLoaded() {
 
 }
 
 function startGame() {
+
+	// Cleanup any existing/previous game/grid
+	let gameContainer = document.querySelector("#game-board-container");
+	while (gameContainer.firstChild) {
+		gameContainer.removeChild(gameContainer.firstChild);
+	}
+
 	// Setup Game
 	let iptRows = document.querySelector("#txtRows").value;
 	let iptColumns = document.querySelector("#txtColumns").value;
@@ -31,12 +38,9 @@ function startGame() {
 	document.documentElement.style.setProperty("--game-columns", gameState.cellsX);
 
 	// Generate grid
-	let gameBoard = document.querySelector(".game-board");
-
-	// Cleanup any existing/previous game/grid
-	while (gameBoard.firstChild) {
-		gameBoard.removeChild(gameBoard.firstChild);
-	}
+	let gameBoard = document.createElement("div");
+	gameBoard.className = ("game-board");
+	gameContainer.appendChild(gameBoard);
 
 	for (let i = 0; i < gameState.cells.length; i++) {
 		let child = document.createElement("div");
@@ -89,7 +93,6 @@ function cellRightClicked(event) {
 		default: break;
 	}
 	event.preventDefault();
-
 }
 
 function calculateAdjacents(cell, gameState) {
@@ -179,4 +182,4 @@ function cellClicked(event) {
 	processCell(parseInt(event.target.dataset.cellid), this);
 }
 
-document.addEventListener("DOMContentLoaded", evt => main());
+document.addEventListener("DOMContentLoaded", evt => pageLoaded());

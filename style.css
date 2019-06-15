@@ -15,12 +15,11 @@ body {
 	font-size: 10pt;
 }
 
-
 .game-board {
 	display: inline-grid;
 	background-color: var(--cell-bg-dark);
-	grid-template-columns: repeat(var(--game-columns), 50px);
-	grid-template-rows: repeat(var(--game-rows), 50px);
+	grid-template-columns: repeat(var(--game-columns), 40px);
+	grid-template-rows: repeat(var(--game-rows), 40px);
 }
 
 .cell {
@@ -42,7 +41,7 @@ body {
 	border: black solid 1px;
 	background-color: var(--cell-bg-light);
 	text-align: center;
-	line-height: 50px;
+	line-height: 40px;
 	font-size: 20px;
 	font-weight: bold;
 }
@@ -51,12 +50,14 @@ body {
 	border: black solid 1px;
 	background-image: url(mine.png);
 	background-color: var(--cell-bg-light);
+	background-size: contain;
 }
 
 .cell-clicked-mine {
 	border: black solid 1px;
 	background-image: url(mine.png);
 	background-color: red;
+	background-size: contain;
 }
 
 /* CONTROLS */
