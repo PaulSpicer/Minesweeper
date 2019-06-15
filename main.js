@@ -1,3 +1,10 @@
+const gameCondition = {
+	FRESH_GAME: 0,
+	IN_PROGRESS: 1,
+	COMPLETED: 2
+}
+
+
 function pageLoaded() {
 
 }
@@ -29,7 +36,7 @@ function startGame() {
 		cellsY: iptRows,
 		noOfMines: iptMines,
 		mineLocations: new Set(),
-		status: 0,  // 0=Fresh Board, 1=In Progress, 2=GameOver
+		status: gameCondition.FRESH_GAME,
 		cells: new Array(iptRows * iptColumns),
 		cellsRemaining: (iptRows * iptColumns) - iptMines
 	}
@@ -128,6 +135,7 @@ function processCell(cell, gameState) {
 						gameState.cells[mines].className = "cell-mine"
 					}
 					gameState.cells[cell].className = "cell-clicked-mine";
+					gameState.status = gameCondition.COMPLETED;
 				}
 				else {
 					let cellsToCheck = [cell];
@@ -145,7 +153,6 @@ function processCell(cell, gameState) {
 								}
 							}
 						}
-
 					}
 				}
 				break;
@@ -154,14 +161,9 @@ function processCell(cell, gameState) {
 		case "cell-flagged":
 		default: break;
 	}
-
-	if (gameState.status == 0 || gameState.status == 3)
-	{
-		gameState.status = 1;
-	}
 }
 
-function setGameDiff(row, col, mines) {
+function setGameDifficulty(row, col, mines) {
 	document.querySelector("#txtRows").value = row;
 	document.querySelector("#txtColumns").value = col;
 	document.querySelector("#txtMines").value = mines;
@@ -169,12 +171,17 @@ function setGameDiff(row, col, mines) {
 
 function cellClicked(event) {
 	let targetCell = (parseInt(event.target.dataset.cellid));
-	if (this.status == 0)
-	{
-		mineSetup(targetCell, this);
-		this.status = 1;
+	switch (this.status) {
+		case gameCondition.FRESH_GAME: {
+			mineSetup(targetCell, this);
+			this.status = gameCondition.IN_PROGRESS;
+		}
+		case gameCondition.IN_PROGRESS: {
+			processCell(targetCell, this);
+		}
+		default:
+			break;
 	}
-	processCell(targetCell, this);
 
 }
 
