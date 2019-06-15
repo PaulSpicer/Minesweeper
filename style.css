@@ -8,6 +8,29 @@
 	--cell-bg-light: #CCCCCC;
 }
 
+/* UI */
+
+#ui {
+	display: flex;
+	justify-content: space-between;
+	max-width: calc(40px * var(--game-columns));
+	margin-bottom: 20px;
+	font-weight: bold;
+	visibility: hidden;
+}
+
+.ui-title {
+	font-size: 30px;
+}
+
+.ui-value {
+	font-size: 18px;
+}
+
+#ui-timer {
+	text-align: right;
+}
+
 /* GAME BOARD */
 
 body {
@@ -66,6 +89,6 @@ input {
 	margin-bottom: 15px;
 	width: 50px;
 }
-.ui {
+.controls {
 	margin-top: 30px;
 }

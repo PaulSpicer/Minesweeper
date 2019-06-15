@@ -38,7 +38,12 @@ function startGame() {
 		mineLocations: new Set(),
 		status: gameCondition.FRESH_GAME,
 		cells: new Array(iptRows * iptColumns),
-		cellsRemaining: (iptRows * iptColumns) - iptMines
+		cellsRemaining: (iptRows * iptColumns) - iptMines,
+		minesRemaining: iptMines,
+		time: 0,
+		timerHandler: 0,
+		uiMines: document.querySelector("#ui-mines"),
+		uiTimer: document.querySelector("#ui-timer")
 	}
 
 	document.documentElement.style.setProperty("--game-rows", gameState.cellsY);
@@ -56,6 +61,11 @@ function startGame() {
 		gameBoard.appendChild(child);
 		gameState.cells[i] = child;
 	}
+
+	// Setup UI	
+	document.querySelector("#ui").style.visibility = "visible";
+	gameState.uiMines.innerHTML = gameState.minesRemaining;
+	gameState.uiTimer.innerHTML = gameState.time;
 
 	//Register click handlers
 	gameBoard.addEventListener("contextmenu", cellRightClicked.bind(gameState));
@@ -141,6 +151,7 @@ function processCell(cell, gameState) {
 					let cellsToCheck = [cell];
 					while (cellsToCheck.length > 0) {
 						cell = cellsToCheck.pop();
+						gameState.cellsRemaining--;
 						//UNCOVER SQUARE
 						gameState.cells[cell].className = "cell-clicked";
 						if (gameState.cells[cell].dataset.adjMines != 0) {
@@ -154,12 +165,25 @@ function processCell(cell, gameState) {
 							}
 						}
 					}
+					console.log(gameState.cellsRemaining);
 				}
 				break;
 			}
 		case "cell-click":
 		case "cell-flagged":
 		default: break;
+	}
+
+	if (gameState.cellsRemaining == 0)
+	{
+		// VICTORY CONDITION
+		document.body.style.backgroundColor = "Green";
+		gameState.status = gameCondition.COMPLETED;
+	}
+
+	if (gameState.status == gameCondition.COMPLETED)
+	{
+		window.clearInterval(gameState.timerHandler);
 	}
 }
 
@@ -175,6 +199,7 @@ function cellClicked(event) {
 		case gameCondition.FRESH_GAME: {
 			mineSetup(targetCell, this);
 			this.status = gameCondition.IN_PROGRESS;
+			this.timerHandler = window.setInterval(updateClock.bind(this), 1000);
 		}
 		case gameCondition.IN_PROGRESS: {
 			processCell(targetCell, this);
@@ -182,24 +207,34 @@ function cellClicked(event) {
 		default:
 			break;
 	}
-
 }
 
 function cellRightClicked(event) {
-	switch (event.target.className) {
-		case "cell":
-			{
-				event.target.className = "cell-flagged";
-				break;
-			}
-		case "cell-flagged":
-			{
-				event.target.className = "cell";
-				break;
-			}
-		default: break;
+	if (this.status != gameCondition.COMPLETED)
+	{
+		switch (event.target.className) {
+			case "cell":
+				{
+					event.target.className = "cell-flagged";
+					this.minesRemaining--;
+					break;
+				}
+			case "cell-flagged":
+				{
+					event.target.className = "cell";
+					this.minesRemaining++;
+					break;
+				}
+			default: break;
+		}
 	}
+	this.uiMines.innerHTML = this.minesRemaining;
 	event.preventDefault();
+}
+
+function updateClock() {
+	this.time++;
+	this.uiTimer.innerHTML = this.time;
 }
 
 document.addEventListener("DOMContentLoaded", evt => pageLoaded());
