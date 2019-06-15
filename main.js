@@ -3,8 +3,6 @@ const gameCondition = {
 	IN_PROGRESS: 1,
 	COMPLETED: 2
 }
-
-
 function pageLoaded() {
 
 }
@@ -20,6 +18,9 @@ function startGame() {
 	{
 		window.clearInterval(document.documentElement.INTERVALREFERENCE);
 	}
+
+	// TODO: Win Styling
+	document.body.style.backgroundColor = "White";
 
 	// Setup Game
 	let iptRows = document.querySelector("#txtRows").value;
@@ -158,7 +159,20 @@ function processCell(cell, gameState) {
 						//UNCOVER SQUARE
 						gameState.cells[cell].className = "cell-clicked";
 						if (gameState.cells[cell].dataset.adjMines != 0) {
-							gameState.cells[cell].textContent = gameState.cells[cell].dataset.adjMines;
+							gameState.cells[cell].textContent = gameState.cells[cell].dataset.adjMines;							
+							let colour = "";
+							switch (parseInt(gameState.cells[cell].dataset.adjMines)) {
+								case 1: colour = "#0000ff"; break;
+								case 2: colour = "#008100"; break; 
+								case 3: colour = "#ff1300"; break;
+								case 4: colour = "#000083"; break;
+								case 5: colour = "#810500"; break;
+								case 6: colour = "#2a9494"; break;
+								case 7: colour = "#000000"; break;
+								case 8: colour = "#808080"; break;
+								default: break;
+							}
+							gameState.cells[cell].style.color = colour;
 						}
 						else {
 							for (let adj of calculateAdjacents(cell, gameState)) {
