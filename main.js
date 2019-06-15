@@ -1,21 +1,42 @@
 function main() {
-	// TODO: User Set Board Size & Start New Game Logic
-	let cellsX = 10, cellsY = 10;
-	let noOfMines = 10;
 
-	let gameState = {
-		cellsX: 10,
-		cellsY: 10,
-		noOfMines: 10,
-		mineLocations: new Set(),
-		cells: new Array(cellsX * cellsY)
+}
+
+function startGame() {
+	// Setup Game
+	let iptRows = document.querySelector("#txtRows").value;
+	let iptColumns = document.querySelector("#txtColumns").value;
+	let iptMines = document.querySelector("#txtMines").value;
+
+	if (!(iptRows.match(/^\d+$/) && iptColumns.match(/^\d+$/) && iptMines.match(/^\d+$/)))
+	{
+		alert("Invalid Input Detected");
+		return;
 	}
 
-	document.documentElement.style.setProperty("--game-rows", gameState.cellsX);
-	document.documentElement.style.setProperty("--game-columns", gameState.cellsY);
+	iptRows = parseInt(iptRows);
+	iptColumns = parseInt(iptColumns);
+	iptMines = parseInt(iptMines);
+	
+	let gameState = {
+		cellsX: iptColumns,
+		cellsY: iptRows,
+		noOfMines: iptMines,
+		mineLocations: new Set(),
+		cells: new Array(iptRows * iptColumns),
+		cellsRemaining: (iptRows * iptColumns) - iptMines
+	}
+
+	document.documentElement.style.setProperty("--game-rows", gameState.cellsY);
+	document.documentElement.style.setProperty("--game-columns", gameState.cellsX);
 
 	// Generate grid
 	let gameBoard = document.querySelector(".game-board");
+
+	// Cleanup any existing/previous game/grid
+	while (gameBoard.firstChild) {
+		gameBoard.removeChild(gameBoard.firstChild);
+	}
 
 	for (let i = 0; i < gameState.cells.length; i++) {
 		let child = document.createElement("div");
@@ -25,7 +46,7 @@ function main() {
 		gameState.cells[i] = child;
 	}
 
-	for (let i = 0; i < noOfMines; i++) {
+	for (let i = 0; i < gameState.noOfMines; i++) {
 		let loop = true;
 		while (loop) {
 			let rand = Math.floor(Math.random() * gameState.cells.length);
@@ -114,13 +135,12 @@ function processCell(cell, gameState) {
 		case "cell":
 			{
 				if (gameState.mineLocations.has(parseInt(gameState.cells[cell].dataset.cellid))) {
-					//DO FAILURE STUFF
 
 					for (let mines of gameState.mineLocations) {
-							gameState.cells[mines].className = "cell-mine"
-						}
-						gameState.cells[cell].className = "cell-clicked-mine";
+						gameState.cells[mines].className = "cell-mine"
 					}
+					gameState.cells[cell].className = "cell-clicked-mine";
+				}
 				else {
 					let cellsToCheck = [cell];
 					while (cellsToCheck.length > 0) {
@@ -150,9 +170,9 @@ function processCell(cell, gameState) {
 
 
 function setGameDiff(row, col, mines) {
-	document.querySelector("#iptRows").value = row;
-	document.querySelector("#iptColumns").value = col;
-	document.querySelector("#iptMines").value = mines;
+	document.querySelector("#txtRows").value = row;
+	document.querySelector("#txtColumns").value = col;
+	document.querySelector("#txtMines").value = mines;
 }
 
 function cellClicked(event) {

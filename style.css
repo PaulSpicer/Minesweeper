@@ -2,8 +2,8 @@
 /* VARIABLES */
 
 :root {
-	--game-rows: 10;
-	--game-columns: 10;
+	--game-rows: 0;
+	--game-columns: 0;
 	--cell-bg-dark: #AAAAAA;
 	--cell-bg-light: #CCCCCC;
 }
