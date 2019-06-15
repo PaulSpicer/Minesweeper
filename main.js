@@ -15,8 +15,7 @@ function startGame() {
 	let iptColumns = document.querySelector("#txtColumns").value;
 	let iptMines = document.querySelector("#txtMines").value;
 
-	if (!(iptRows.match(/^\d+$/) && iptColumns.match(/^\d+$/) && iptMines.match(/^\d+$/)))
-	{
+	if (!(iptRows.match(/^\d+$/) && iptColumns.match(/^\d+$/) && iptMines.match(/^\d+$/))) {
 		alert("Invalid Input Detected");
 		return;
 	}
@@ -24,12 +23,13 @@ function startGame() {
 	iptRows = parseInt(iptRows);
 	iptColumns = parseInt(iptColumns);
 	iptMines = parseInt(iptMines);
-	
+
 	let gameState = {
 		cellsX: iptColumns,
 		cellsY: iptRows,
 		noOfMines: iptMines,
 		mineLocations: new Set(),
+		status: 0,  // 0=Fresh Board, 1=In Progress, 2=GameOver
 		cells: new Array(iptRows * iptColumns),
 		cellsRemaining: (iptRows * iptColumns) - iptMines
 	}
@@ -50,11 +50,19 @@ function startGame() {
 		gameState.cells[i] = child;
 	}
 
+	//Register click handlers
+	gameBoard.addEventListener("contextmenu", cellRightClicked.bind(gameState));
+	gameBoard.addEventListener("click", cellClicked.bind(gameState));
+}
+
+
+function mineSetup(immuneCell, gameState) {
+	// Seed Mines
 	for (let i = 0; i < gameState.noOfMines; i++) {
 		let loop = true;
 		while (loop) {
 			let rand = Math.floor(Math.random() * gameState.cells.length);
-			if (!gameState.mineLocations.has(rand)) {
+			if (!gameState.mineLocations.has(rand) && rand != immuneCell) {
 				gameState.mineLocations.add(rand);
 				loop = false;
 			}
@@ -71,28 +79,6 @@ function startGame() {
 		}
 		gameState.cells[i].dataset.adjMines = count;
 	}
-
-	//Register click handlers
-	gameBoard.addEventListener("contextmenu", cellRightClicked.bind(gameState));
-	gameBoard.addEventListener("click", cellClicked.bind(gameState));
-}
-
-
-function cellRightClicked(event) {
-	switch (event.target.className) {
-		case "cell":
-			{
-				event.target.className = "cell-flagged";
-				break;
-			}
-		case "cell-flagged":
-			{
-				event.target.className = "cell";
-				break;
-			}
-		default: break;
-	}
-	event.preventDefault();
 }
 
 function calculateAdjacents(cell, gameState) {
@@ -138,7 +124,6 @@ function processCell(cell, gameState) {
 		case "cell":
 			{
 				if (gameState.mineLocations.has(parseInt(gameState.cells[cell].dataset.cellid))) {
-
 					for (let mines of gameState.mineLocations) {
 						gameState.cells[mines].className = "cell-mine"
 					}
@@ -169,8 +154,12 @@ function processCell(cell, gameState) {
 		case "cell-flagged":
 		default: break;
 	}
-}
 
+	if (gameState.status == 0 || gameState.status == 3)
+	{
+		gameState.status = 1;
+	}
+}
 
 function setGameDiff(row, col, mines) {
 	document.querySelector("#txtRows").value = row;
@@ -179,7 +168,31 @@ function setGameDiff(row, col, mines) {
 }
 
 function cellClicked(event) {
-	processCell(parseInt(event.target.dataset.cellid), this);
+	let targetCell = (parseInt(event.target.dataset.cellid));
+	if (this.status == 0)
+	{
+		mineSetup(targetCell, this);
+		this.status = 1;
+	}
+	processCell(targetCell, this);
+
+}
+
+function cellRightClicked(event) {
+	switch (event.target.className) {
+		case "cell":
+			{
+				event.target.className = "cell-flagged";
+				break;
+			}
+		case "cell-flagged":
+			{
+				event.target.className = "cell";
+				break;
+			}
+		default: break;
+	}
+	event.preventDefault();
 }
 
 document.addEventListener("DOMContentLoaded", evt => pageLoaded());
