@@ -216,7 +216,7 @@ function cellClicked(event) {
 		case gameCondition.FRESH_GAME: {
 			mineSetup(targetCell, this);
 			this.status = gameCondition.IN_PROGRESS;
-			this.timerHandler = window.setInterval(updateClock.bind(this), 1000);
+			this.timerHandler = window.setInterval(updateClock.bind(this), 100);
 			document.documentElement.INTERVALREFERENCE = this.timerHandler;
 		}
 		case gameCondition.IN_PROGRESS: {
@@ -251,8 +251,8 @@ function cellRightClicked(event) {
 }
 
 function updateClock() {
-	this.time++;
-	this.uiTimer.innerHTML = this.time;
+	this.time+= 0.1;
+	this.uiTimer.innerHTML = this.time.toFixed(1);
 }
 
 document.addEventListener("DOMContentLoaded", evt => pageLoaded());
